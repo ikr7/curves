@@ -143,9 +143,59 @@ function App() {
         }}
         onPointerDown={handleCanvasPointerDown}
       >
-        {
-          // points.map()
-        }
+        {(() => {
+          if (points.length < 4) {
+            return;
+          }
+          if (!showBSpline) {
+            return;
+          }
+          const basisMatrix = (new DOMMatrix([
+            1 / 6, -3 / 6, 3 / 6, -1 / 6,
+            4 / 6, 0 / 6, -6 / 6, 3 / 6,
+            1 / 6, 3 / 6, 3 / 6, -3 / 6,
+            0 / 6, 0 / 6, 0 / 6, 1 / 6,
+          ]));
+          const interpolatedPoints = [];
+          for (let i = 2; i < points.length - 1; i++) {
+            const p0 = points[i - 2];
+            const p1 = points[i - 1];
+            const p2 = points[i];
+            const p3 = points[i + 1];
+            for (let t = 0; t <= 1; t += 0.05) {
+              const t2 = t * t;
+              const t3 = t2 * t;
+              const prod = (new DOMMatrix([
+                1, 0, 0, 0,
+                t, 0, 0, 0,
+                t2, 0, 0, 0,
+                t3, 0, 0, 0,
+              ])).multiply(basisMatrix);
+              const r = [prod.m11, prod.m21, prod.m31, prod.m41];
+              const x =
+                p0.x * r[0] +
+                p1.x * r[1] +
+                p2.x * r[2] +
+                p3.x * r[3];
+              const y =
+                p0.y * r[0] +
+                p1.y * r[1] +
+                p2.y * r[2] +
+                p3.y * r[3];
+              interpolatedPoints.push({ x, y });
+            }
+          }
+          return (
+            <polyline
+              points={
+                interpolatedPoints.map(({ x, y }) => `${x},${y}`).join(' ')
+              }
+              stroke="yellow"
+              strokeWidth={3}
+              fill="transparent"
+            />
+          );
+        })()}
         {
           showLinear ?
             points.map(({ x, y }, i) => {
@@ -243,6 +293,33 @@ function App() {
               strokeWidth={3}
               fill="transparent"
             />
+          );
+        })()}
+        {(() => {
+          if (points.length < 2) {
+            return;
+          }
+          return (
+            [
+              <circle
+                cx={points[0].x * 2 - points[1].x}
+                cy={points[0].y * 2 - points[1].y}
+                r={mode === 'MOVE_POINT' ? 10 : 3}
+                fill="#314761"
+                stroke="gray"
+                strokeWidth={3}
+                key="virtualEndpoint0"
+              />,
+              <circle
+                cx={points[points.length - 1].x * 2 - points[points.length - 2].x}
+                cy={points[points.length - 1].y * 2 - points[points.length - 2].y}
+                r={mode === 'MOVE_POINT' ? 10 : 3}
+                fill="#314761"
+                stroke="gray"
+                strokeWidth={3}
+                key="virtualEndpoint1"
+              />
+            ]
           );
         })()}
         {points.map(({ x, y }, i) => {
