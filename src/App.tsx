@@ -121,7 +121,8 @@ function App() {
     <div>
       <h1>Spline Curves</h1>
       <p>
-        mode: {mode}
+        {mode === 'ADD_POINT' ? 'click canvas to add a control point' : ''}
+        {mode === 'MOVE_POINT' ? 'drag a control point to manipulate line' : ''}
       </p>
       <div>
         <div>
@@ -139,6 +140,7 @@ function App() {
             <input type="range" disabled={!showCardinal} min={0} max={1} step={0.05} value={cardinalScale} onChange={(e) => setCardinalScale(parseFloat(e.target.value))} />
             <span>{cardinalScale}</span>
             <span>{cardinalScale === 0.5 ? ' (at 0.5, it\'s equivalent to Catmull-Rom spline)' : null}</span>
+            <span>{cardinalScale === 0 ? ' (at 0, it\'s equivalent to linear spline)' : null}</span>
           </div>
           <div>
             <input type="checkbox" id="showBSpline" checked={showBSpline} onChange={(e) => setShowBSpline(e.target.checked)} />
@@ -147,9 +149,9 @@ function App() {
         </div>
       </div>
       <p>
-        <button onClick={() => setMode('ADD_POINT')}>ADD_POINT</button>
-        <button onClick={() => setMode('MOVE_POINT')}>MOVE_POINT</button>
-        <button onClick={() => setPoints([])}>CLEAR</button>
+        <button onClick={() => setMode('ADD_POINT')}>add points</button>
+        <button onClick={() => setMode('MOVE_POINT')}>move points</button>
+        <button onClick={() => setPoints([])}>clear points</button>
         <button onClick={() => setPoints([
           { x: 100, y: 250, grabbed: false },
           { x: 200, y: 150, grabbed: false },
@@ -158,7 +160,7 @@ function App() {
           { x: 500, y: 350, grabbed: false },
           { x: 600, y: 350, grabbed: false },
           { x: 700, y: 250, grabbed: false },
-        ])}>WAVE</button>
+        ])}>reset</button>
       </p>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -362,7 +364,10 @@ function App() {
         })}
       </svg>
       <p>
-        inspired by: <a href="https://www.youtube.com/watch?v=jvPPXbo87ds">"The Continuity of Splines", by Freya Holmér</a>
+        inspired by: <a href="https://www.youtube.com/watch?v=jvPPXbo87ds">"The Continuity of Splines"</a>, by Freya Holmér
+      </p>
+      <p>
+        code: <a href="https://github.com/ikr7/curves">ikr7/curves</a>
       </p>
     </div>
   );
