@@ -9,7 +9,15 @@ type DraggablePoint = {
 type OperationMode = 'ADD_POINT' | 'MOVE_POINT';
 
 function App() {
-  const [points, setPoints] = useState<DraggablePoint[]>([]);
+  const [points, setPoints] = useState<DraggablePoint[]>([
+    { x: 100, y: 250, grabbed: false },
+    { x: 200, y: 150, grabbed: false },
+    { x: 300, y: 150, grabbed: false },
+    { x: 400, y: 250, grabbed: false },
+    { x: 500, y: 350, grabbed: false },
+    { x: 600, y: 350, grabbed: false },
+    { x: 700, y: 250, grabbed: false },
+  ]);
   const [mode, setMode] = useState<OperationMode>('ADD_POINT');
   const [cardinalScale, setCardinalScale] = useState<number>(0.5);
   const [showLinear, setShowLinear] = useState<boolean>(true);
