@@ -158,12 +158,12 @@ function App() {
           if (!showBSpline) {
             return;
           }
-          const basisMatrix = (new DOMMatrix([
+          const basisMatrix = new DOMMatrix([
             1 / 6, -3 / 6, 3 / 6, -1 / 6,
             4 / 6, 0 / 6, -6 / 6, 3 / 6,
             1 / 6, 3 / 6, 3 / 6, -3 / 6,
             0 / 6, 0 / 6, 0 / 6, 1 / 6,
-          ]));
+          ]);
           const interpolatedPoints = [];
           for (let i = 2; i < points.length - 1; i++) {
             const p0 = points[i - 2];
