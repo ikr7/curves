@@ -361,6 +361,9 @@ function App() {
           );
         })}
       </svg>
+      <p>
+        inspired by: <a href="https://www.youtube.com/watch?v=jvPPXbo87ds">"The Continuity of Splines", by Freya Holmér</a>
+      </p>
     </div>
   );
 }
