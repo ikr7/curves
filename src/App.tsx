@@ -175,7 +175,7 @@ function App() {
         onPointerDown={handleCanvasPointerDown}
       >
         {(() => {
-          if (points.length < 4) {
+          if (points.length < 2) {
             return;
           }
           if (!showBSpline) {
@@ -281,25 +281,9 @@ function App() {
             return;
           }
           const velocities = [];
-          for (let i = 0; i < points.length; i++) {
-            let prev: { x: number, y: number };
-            let next: { x: number, y: number };
-            if (i === 0) {
-              prev = {
-                x: 2 * points[i].x - points[i + 1].x,
-                y: 2 * points[i].y - points[i + 1].y,
-              };
-              next = points[i + 1];
-            } else if (i === points.length - 1) {
-              prev = points[i - 1];
-              next = {
-                x: 2 * points[i].x - points[i - 1].x,
-                y: 2 * points[i].y - points[i - 1].y,
-              };
-            } else {
-              prev = points[i - 1];
-              next = points[i + 1];
-            }
+          for (let i = 1; i < extendedPoints.length - 1; i++) {
+            const prev = extendedPoints[i - 1];
+            const next = extendedPoints[i + 1];
             velocities.push({
               x: next.x - prev.x,
               y: next.y - prev.y,
