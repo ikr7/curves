@@ -94,6 +94,29 @@ function App() {
       }
     }));
   }
+
+  const extendedPoints: typeof points = [];
+
+  if (points.length >= 2) {
+    extendedPoints.push({
+      x: points[0].x * 2 - points[1].x,
+      y: points[0].y * 2 - points[1].y,
+      grabbed: false,
+    });
+  }
+
+  for (const p of points) {
+    extendedPoints.push(p);
+  }
+
+  if (points.length >= 2) {
+    extendedPoints.push({
+      x: points[points.length - 1].x * 2 - points[points.length - 2].x,
+      y: points[points.length - 1].y * 2 - points[points.length - 2].y,
+      grabbed: false,
+    });
+  }
+
   return (
     <div>
       <h1>Spline Curves</h1>
@@ -165,11 +188,11 @@ function App() {
             0 / 6, 0 / 6, 0 / 6, 1 / 6,
           ]);
           const interpolatedPoints = [];
-          for (let i = 2; i < points.length - 1; i++) {
-            const p0 = points[i - 2];
-            const p1 = points[i - 1];
-            const p2 = points[i];
-            const p3 = points[i + 1];
+          for (let i = 2; i < extendedPoints.length - 1; i++) {
+            const p0 = extendedPoints[i - 2];
+            const p1 = extendedPoints[i - 1];
+            const p2 = extendedPoints[i];
+            const p3 = extendedPoints[i + 1];
             for (let t = 0; t <= 1; t += 0.05) {
               const t2 = t * t;
               const t3 = t2 * t;
