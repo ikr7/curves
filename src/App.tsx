@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Bezier } from './Bezier';
 import { BSpline } from './BSpline';
 import { LinearSpline } from './Linear';
 
@@ -180,30 +181,7 @@ function App() {
       >
         {showBSpline ? <BSpline points={extendedPoints} /> : null}
         {showLinear ? <LinearSpline points={extendedPoints} /> : null}
-        {
-          showBezier ?
-            points.map(({ x, y }, i) => {
-              if (i !== 0 && i % 3 === 0) {
-                return (
-                  <path
-                    d={`
-                          M ${points[i - 3].x} ${points[i - 3].y}
-                          C
-                            ${points[i - 2].x} ${points[i - 2].y},
-                            ${points[i - 1].x} ${points[i - 1].y},
-                            ${x} ${y}
-                        `}
-                    key={i}
-                    fill="transparent"
-                    stroke="red"
-                    strokeWidth={3}
-                  />
-                );
-              }
-            })
-            :
-            null
-        }
+        {showBezier ? <Bezier points={extendedPoints} /> : null}
         {(() => {
           if (!showCardinal) {
             return;
