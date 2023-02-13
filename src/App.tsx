@@ -183,51 +183,68 @@ function App() {
           if (!showBSpline) {
             return;
           }
-          const basisMatrix = new DOMMatrix([
-            1 / 6, -3 / 6, 3 / 6, -1 / 6,
-            4 / 6, 0 / 6, -6 / 6, 3 / 6,
-            1 / 6, 3 / 6, 3 / 6, -3 / 6,
-            0 / 6, 0 / 6, 0 / 6, 1 / 6,
-          ]);
-          const interpolatedPoints = [];
+
+          const paths = [];
+
           for (let i = 2; i < extendedPoints.length - 1; i++) {
+
             const p0 = extendedPoints[i - 2];
             const p1 = extendedPoints[i - 1];
             const p2 = extendedPoints[i];
             const p3 = extendedPoints[i + 1];
-            for (let t = 0; t <= 1; t += 0.05) {
-              const t2 = t * t;
-              const t3 = t2 * t;
-              const prod = (new DOMMatrix([
-                1, 0, 0, 0,
-                t, 0, 0, 0,
-                t2, 0, 0, 0,
-                t3, 0, 0, 0,
-              ])).multiply(basisMatrix);
-              const r = [prod.m11, prod.m21, prod.m31, prod.m41];
-              const x =
-                p0.x * r[0] +
-                p1.x * r[1] +
-                p2.x * r[2] +
-                p3.x * r[3];
-              const y =
-                p0.y * r[0] +
-                p1.y * r[1] +
-                p2.y * r[2] +
-                p3.y * r[3];
-              interpolatedPoints.push({ x, y });
-            }
-          }
-          return (
-            <polyline
-              points={
-                interpolatedPoints.map(({ x, y }) => `${x},${y}`).join(' ')
-              }
+
+            const c0 = {
+              x: (p0.x + 4 * p1.x + p2.x) / 6,
+              y: (p0.y + 4 * p1.y + p2.y) / 6,
+            };
+            const c1 = {
+              x: (-p0.x + p2.x) / 2,
+              y: (-p0.y + p2.y) / 2,
+            };
+            const c2 = {
+              x: (p0.x - 2 * p1.x + p2.x) / 2,
+              y: (p0.y - 2 * p1.y + p2.y) / 2,
+            };
+            const c3 = {
+              x: (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) / 6,
+              y: (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) / 6,
+            };
+
+            const b0 = {
+              x: c0.x,
+              y: c0.y,
+            };
+            const b1 = {
+              x: c0.x + c1.x / 3,
+              y: c0.y + c1.y / 3,
+            };
+            const b2 = {
+              x: c0.x + c1.x * 2 / 3 + c2.x / 3,
+              y: c0.y + c1.y * 2 / 3 + c2.y / 3,
+            };
+            const b3 = {
+              x: c0.x + c1.x + c2.x + c3.x,
+              y: c0.y + c1.y + c2.y + c3.y,
+            };
+
+            paths.push(<path
+              d={`
+                M ${b0.x} ${b0.y}
+                C
+                  ${b1.x} ${b1.y},
+                  ${b2.x} ${b2.y},
+                  ${b3.x} ${b3.y}
+              `}
               stroke="yellow"
               strokeWidth={3}
               fill="transparent"
-            />
-          );
+              key={i}
+            />);
+
+          }
+
+          return paths;
+
         })()}
         {
           showLinear ?
