@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BSpline } from './BSpline';
+import { LinearSpline } from './Linear';
 
 type DraggablePoint = {
   x: number,
@@ -178,28 +179,7 @@ function App() {
         onPointerDown={handleCanvasPointerDown}
       >
         {showBSpline ? <BSpline extendedPoints={extendedPoints} /> : null}
-        {
-          showLinear ?
-            points.map(({ x, y }, i) => {
-              if (i === 0) {
-                return;
-              }
-              return (
-                <line
-                  x1={points[i - 1].x}
-                  y1={points[i - 1].y}
-                  x2={x}
-                  y2={y}
-                  key={i}
-                  stroke="white"
-                  strokeWidth={1}
-                  strokeDasharray={4}
-                />
-              );
-            })
-            :
-            null
-        }
+        {showLinear ? <LinearSpline points={extendedPoints} /> : null}
         {
           showBezier ?
             points.map(({ x, y }, i) => {
