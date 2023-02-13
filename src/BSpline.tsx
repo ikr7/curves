@@ -1,14 +1,14 @@
 import { Point } from './types';
 
 type BSplineProps = {
-  extendedPoints: Point[],
+  points: Point[],
 };
 
 export function BSpline(props: BSplineProps) {
 
-  const { extendedPoints } = props;
+  const { points } = props;
 
-  if (extendedPoints.length < 4) {
+  if (points.length < 4) {
     return null;
   }
 
@@ -26,12 +26,12 @@ export function BSpline(props: BSplineProps) {
 
   const bezierCurves: [Point, Point, Point, Point][] = [];
 
-  for (let i = 2; i < extendedPoints.length - 1; i++) {
+  for (let i = 2; i < points.length - 1; i++) {
 
-    const p0 = extendedPoints[i - 2];
-    const p1 = extendedPoints[i - 1];
-    const p2 = extendedPoints[i];
-    const p3 = extendedPoints[i + 1];
+    const p0 = points[i - 2];
+    const p1 = points[i - 1];
+    const p2 = points[i];
+    const p3 = points[i + 1];
 
     const bx = bSplineToBezier.multiply(new DOMMatrix([
       p0.x, p1.x, p2.x, p3.x,

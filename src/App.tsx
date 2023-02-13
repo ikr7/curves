@@ -178,7 +178,7 @@ function App() {
         }}
         onPointerDown={handleCanvasPointerDown}
       >
-        {showBSpline ? <BSpline extendedPoints={extendedPoints} /> : null}
+        {showBSpline ? <BSpline points={extendedPoints} /> : null}
         {showLinear ? <LinearSpline points={extendedPoints} /> : null}
         {
           showBezier ?
