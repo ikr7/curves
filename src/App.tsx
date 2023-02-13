@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
+import { OperationMode } from './types';
 import { Bezier } from './Bezier';
 import { BSpline } from './BSpline';
 import { LinearSpline } from './Linear';
+import { ExtendedPoints } from './ExtendedPoints';
 
 type DraggablePoint = {
   x: number,
   y: number,
   grabbed: boolean,
 };
-
-type OperationMode = 'ADD_POINT' | 'MOVE_POINT';
 
 function App() {
   const [points, setPoints] = useState<DraggablePoint[]>([
@@ -219,33 +219,7 @@ function App() {
             />
           );
         })()}
-        {(() => {
-          if (points.length < 2) {
-            return;
-          }
-          return (
-            [
-              <circle
-                cx={points[0].x * 2 - points[1].x}
-                cy={points[0].y * 2 - points[1].y}
-                r={mode === 'MOVE_POINT' ? 10 : 3}
-                fill="#314761"
-                stroke="gray"
-                strokeWidth={3}
-                key="virtualEndpoint0"
-              />,
-              <circle
-                cx={points[points.length - 1].x * 2 - points[points.length - 2].x}
-                cy={points[points.length - 1].y * 2 - points[points.length - 2].y}
-                r={mode === 'MOVE_POINT' ? 10 : 3}
-                fill="#314761"
-                stroke="gray"
-                strokeWidth={3}
-                key="virtualEndpoint1"
-              />
-            ]
-          );
-        })()}
+        {<ExtendedPoints points={extendedPoints} mode={mode} />}
         {points.map(({ x, y }, i) => {
           return (
             <circle
