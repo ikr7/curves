@@ -198,6 +198,8 @@ function App() {
 
           const paths = [];
 
+          const bezierCurves: [{ x: number, y: number }, { x: number, y: number }, { x: number, y: number }, { x: number, y: number }][] = [];
+
           for (let i = 2; i < extendedPoints.length - 1; i++) {
 
             const p0 = extendedPoints[i - 2];
@@ -224,23 +226,30 @@ function App() {
             const b2 = { x: bx.m13, y: by.m13 };
             const b3 = { x: bx.m14, y: by.m14 };
 
-            paths.push(<path
-              d={`
-                M ${b0.x} ${b0.y}
-                C
-                  ${b1.x} ${b1.y},
-                  ${b2.x} ${b2.y},
-                  ${b3.x} ${b3.y}
-              `}
-              stroke="yellow"
-              strokeWidth={3}
-              fill="transparent"
-              key={i}
-            />);
+            bezierCurves.push([b0, b1, b2, b3]);
 
           }
 
-          return paths;
+          let pathSpecification = '';
+
+          pathSpecification += `M ${bezierCurves[0][0].x} ${bezierCurves[0][0].y}`;
+          pathSpecification += `
+            C
+              ${bezierCurves[0][1].x} ${bezierCurves[0][1].y},
+              ${bezierCurves[0][2].x} ${bezierCurves[0][2].y},
+              ${bezierCurves[0][3].x} ${bezierCurves[0][3].y}
+          `;
+
+          for (const [b0, b1, b2, b3] of bezierCurves.slice(1)) {
+            pathSpecification += ` S ${b2.x} ${b2.y}, ${b3.x} ${b3.y}`;
+          }
+
+          return (<path
+            d={pathSpecification}
+            stroke="yellow"
+            strokeWidth={3}
+            fill="transparent"
+          />);
 
         })()}
         {
