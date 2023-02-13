@@ -184,6 +184,18 @@ function App() {
             return;
           }
 
+          const bSplineToBezier = (new DOMMatrix([
+            1, -3, 3, -1,
+            0, 3, -6, 3,
+            0, 0, 3, -3,
+            0, 0, 0, 1,
+          ])).inverse().multiply(new DOMMatrix([
+            1, -3, 3, -1,
+            4, 0, -6, 3,
+            1, 3, 3, -3,
+            0, 0, 0, 1,
+          ].map(e => e / 6)));
+
           const paths = [];
 
           for (let i = 2; i < extendedPoints.length - 1; i++) {
@@ -193,39 +205,24 @@ function App() {
             const p2 = extendedPoints[i];
             const p3 = extendedPoints[i + 1];
 
-            const c0 = {
-              x: (p0.x + 4 * p1.x + p2.x) / 6,
-              y: (p0.y + 4 * p1.y + p2.y) / 6,
-            };
-            const c1 = {
-              x: (-p0.x + p2.x) / 2,
-              y: (-p0.y + p2.y) / 2,
-            };
-            const c2 = {
-              x: (p0.x - 2 * p1.x + p2.x) / 2,
-              y: (p0.y - 2 * p1.y + p2.y) / 2,
-            };
-            const c3 = {
-              x: (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) / 6,
-              y: (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) / 6,
-            };
+            const bx = bSplineToBezier.multiply(new DOMMatrix([
+              p0.x, p1.x, p2.x, p3.x,
+              0, 0, 0, 0,
+              0, 0, 0, 0,
+              0, 0, 0, 0,
+            ]));
 
-            const b0 = {
-              x: c0.x,
-              y: c0.y,
-            };
-            const b1 = {
-              x: c0.x + c1.x / 3,
-              y: c0.y + c1.y / 3,
-            };
-            const b2 = {
-              x: c0.x + c1.x * 2 / 3 + c2.x / 3,
-              y: c0.y + c1.y * 2 / 3 + c2.y / 3,
-            };
-            const b3 = {
-              x: c0.x + c1.x + c2.x + c3.x,
-              y: c0.y + c1.y + c2.y + c3.y,
-            };
+            const by = bSplineToBezier.multiply(new DOMMatrix([
+              p0.y, p1.y, p2.y, p3.y,
+              0, 0, 0, 0,
+              0, 0, 0, 0,
+              0, 0, 0, 0,
+            ]));
+
+            const b0 = { x: bx.m11, y: by.m11 };
+            const b1 = { x: bx.m12, y: by.m12 };
+            const b2 = { x: bx.m13, y: by.m13 };
+            const b3 = { x: bx.m14, y: by.m14 };
 
             paths.push(<path
               d={`
