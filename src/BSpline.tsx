@@ -1,30 +1,38 @@
+import { computeCurvature } from './computeCurvature';
 import { Point } from './types';
 
 type BSplineProps = {
   points: Point[],
+  renderCurvature: boolean,
 };
 
 export function BSpline(props: BSplineProps) {
 
-  const { points } = props;
+  const { points, renderCurvature } = props;
 
   if (points.length < 4) {
     return null;
   }
 
-  const bSplineToBezier = (new DOMMatrix([
+  const bezierMatrix = (new DOMMatrix([
     1, -3, 3, -1,
     0, 3, -6, 3,
     0, 0, 3, -3,
     0, 0, 0, 1,
-  ])).inverse().multiply(new DOMMatrix([
+  ]));
+
+  const basisMatrix = new DOMMatrix([
     1, -3, 3, -1,
     4, 0, -6, 3,
     1, 3, 3, -3,
     0, 0, 0, 1,
-  ].map(e => e / 6)));
+  ].map(e => e / 6));
+
+  const bSplineToBezier = bezierMatrix.inverse().multiply(basisMatrix);
 
   const bezierCurves: [Point, Point, Point, Point][] = [];
+
+  const curvatureCircles = [];
 
   for (let i = 2; i < points.length - 1; i++) {
 
@@ -54,6 +62,38 @@ export function BSpline(props: BSplineProps) {
 
     bezierCurves.push([b0, b1, b2, b3]);
 
+    // compute curvature (wip)
+
+    if (renderCurvature) {
+
+      const cx = basisMatrix.multiply(new DOMMatrix([
+        p0.x, p1.x, p2.x, p3.x,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+      ]));
+
+      const cy = basisMatrix.multiply(new DOMMatrix([
+        p0.y, p1.y, p2.y, p3.y,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+      ]));
+
+      const c0 = { x: cx.m11, y: cy.m11 };
+      const c1 = { x: cx.m12, y: cy.m12 };
+      const c2 = { x: cx.m13, y: cy.m13 };
+      const c3 = { x: cx.m14, y: cy.m14 };
+
+      curvatureCircles.push(...computeCurvature({
+        cubicCurveCoefficients: [c0, c1, c2, c3],
+        resolution: 64,
+        renderScale: 20,
+        key: i
+      }));
+
+    }
+
   }
 
   let pathSpecification = '';
@@ -70,11 +110,16 @@ export function BSpline(props: BSplineProps) {
     pathSpecification += ` S ${b2.x} ${b2.y}, ${b3.x} ${b3.y}`;
   }
 
-  return (<path
-    d={pathSpecification}
-    stroke="yellow"
-    strokeWidth={3}
-    fill="transparent"
-  />);
+  return (
+    <>
+      <path
+        d={pathSpecification}
+        stroke="yellow"
+        strokeWidth={3}
+        fill="transparent"
+      />
+      {renderCurvature ? curvatureCircles : null}
+    </>
+  );
 
 }

@@ -23,6 +23,7 @@ function App() {
   ]);
   const [mode, setMode] = useState<OperationMode>('ADD_POINT');
   const [cardinalScale, setCardinalScale] = useState<number>(0.5);
+  const [showCurvature, setShowCurvature] = useState<boolean>(true);
   const [showLinear, setShowLinear] = useState<boolean>(true);
   const [showBezier, setShowBezier] = useState<boolean>(true);
   const [showCardinal, setShowCardinal] = useState<boolean>(true);
@@ -130,6 +131,10 @@ function App() {
       <div>
         <div>
           <div>
+            <input type="checkbox" id="showCurvature" checked={showCurvature} onChange={(e) => setShowCurvature(e.target.checked)} />
+            <label htmlFor="showCurvature">show curvature (wip)</label>
+          </div>
+          <div>
             <input type="checkbox" id="showLinear" checked={showLinear} onChange={(e) => setShowLinear(e.target.checked)} />
             <label htmlFor="showLinear">show linear</label>
           </div>
@@ -179,9 +184,9 @@ function App() {
         }}
         onPointerDown={handleCanvasPointerDown}
       >
-        {showBSpline ? <BSpline points={extendedPoints} /> : null}
+        {showBSpline ? <BSpline points={extendedPoints} renderCurvature={showCurvature} /> : null}
         {showLinear ? <LinearSpline points={extendedPoints} /> : null}
-        {showBezier ? <Bezier points={extendedPoints} /> : null}
+        {showBezier ? <Bezier points={extendedPoints} renderCurvature={showCurvature} /> : null}
         {(() => {
           if (!showCardinal) {
             return;
