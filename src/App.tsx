@@ -225,14 +225,14 @@ function App() {
           );
         })()}
         {<ExtendedPoints points={extendedPoints} mode={mode} />}
-        {points.map(({ x, y }, i) => {
+        {points.map(({ x, y, grabbed }, i) => {
           return (
             <circle
               cx={x}
               cy={y}
               r={mode === 'MOVE_POINT' ? 10 : 3}
               key={i}
-              fill="#314761"
+              fill={grabbed ? 'white' : '#314761'}
               stroke="white"
               strokeWidth={3}
               onPointerDown={(e) => handlePointPointerDown(i, e)}
