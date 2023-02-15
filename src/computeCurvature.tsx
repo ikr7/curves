@@ -15,7 +15,7 @@ export function computeCurvature(props: CurvatureProps) {
 
   const [c0, c1, c2, c3] = cubicCurveCoefficients;
 
-  for (let t = 0; t < 1; t += 1 / resolution) {
+  for (let t = 0; t <= 1; t += 1 / resolution) {
     const t2 = t * t;
     const t3 = t2 * t;
     const xd = c1.x + 2 * c2.x * t + 3 * c3.x * t2; // 1st derivative
@@ -27,16 +27,29 @@ export function computeCurvature(props: CurvatureProps) {
     const y = c0.y + c1.y * t + c2.y * t2 + c3.y * t3;
     const velocityNorm = Math.hypot(xd, yd);
     const factor = renderScale / r / velocityNorm;
-    curvaturePoints.push(<line
-      x1={x}
-      y1={y}
-      x2={x + yd * factor}
-      y2={y - xd * factor}
-      stroke="black"
-      key={`${key}-${t}`}
-    />)
+    curvaturePoints.push([x, y, x + yd * factor, y - xd * factor]);
   }
 
-  return curvaturePoints;
+  return [
+    <polyline
+      points={curvaturePoints.map(([x, y, dx, dy]) => `${dx} ${dy}`).join(' ')}
+      stroke="white"
+      fill="transparent"
+      key={`${key}_curvature`}
+    />,
+    ...curvaturePoints.map(([x, y, dx, dy], i) => {
+      if (i % Math.floor(resolution / 16) !== 0) {
+        return null;
+      }
+      return (<line
+        x1={x}
+        y1={y}
+        x2={dx}
+        y2={dy}
+        stroke="white"
+        key={`${key}_${i}_curvature`}
+      />);
+    })
+  ];
 
 }
