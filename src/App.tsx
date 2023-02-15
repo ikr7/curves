@@ -230,7 +230,7 @@ function App() {
             <circle
               cx={x}
               cy={y}
-              r={mode === 'MOVE_POINT' ? 10 : 3}
+              r={mode === 'MOVE_POINT' ? 10 : 1}
               key={i}
               fill={grabbed ? 'white' : '#314761'}
               stroke="white"

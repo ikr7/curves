@@ -18,7 +18,7 @@ export function ExtendedPoints(props: ExtendedPointsProps) {
       <circle
         cx={points[0].x}
         cy={points[0].y}
-        r={mode === 'MOVE_POINT' ? 10 : 3}
+        r={mode === 'MOVE_POINT' ? 10 : 1}
         fill="#314761"
         stroke="gray"
         strokeWidth={3}
@@ -27,7 +27,7 @@ export function ExtendedPoints(props: ExtendedPointsProps) {
       <circle
         cx={points[points.length - 1].x}
         cy={points[points.length - 1].y}
-        r={mode === 'MOVE_POINT' ? 10 : 3}
+        r={mode === 'MOVE_POINT' ? 10 : 1}
         fill="#314761"
         stroke="gray"
         strokeWidth={3}
