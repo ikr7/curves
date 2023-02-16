@@ -108,7 +108,7 @@ export function CardinalSpline(props: CardinalSplineProps) {
           fill: 'transparent',
         }}
       />
-      {renderCurvature ? curvatureCircles : null}
+      {renderCurvature && scale !== 0 ? curvatureCircles : null}
     </>
   );
 
