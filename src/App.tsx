@@ -73,8 +73,8 @@ function App() {
       if (!point.grabbed) {
         return point;
       }
-      const x = e.nativeEvent.offsetX;
-      const y = e.nativeEvent.offsetY;
+      const x = Math.min(800, Math.max(0, e.nativeEvent.offsetX));
+      const y = Math.min(500, Math.max(0, e.nativeEvent.offsetY));
       return {
         x, y,
         grabbed: true
