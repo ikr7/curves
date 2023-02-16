@@ -55,7 +55,7 @@ function App() {
         x: point.x,
         y: point.y,
         grabbed: true,
-      }
+      };
     }));
   }
   function handlePointPointerMove(targetIndex: number, e: React.PointerEvent<SVGElement>) {
@@ -65,7 +65,7 @@ function App() {
     }
     if (e.buttons !== 1) {
       return;
-    }
+    };
     setPoints(points.map((point, index) => {
       if (targetIndex !== index) {
         return point;
@@ -78,7 +78,7 @@ function App() {
       return {
         x, y,
         grabbed: true
-      }
+      };
     }));
   }
   function handlePointPointerUp(targetIndex: number, e: React.PointerEvent<SVGElement>) {
@@ -95,7 +95,7 @@ function App() {
         x: point.x,
         y: point.y,
         grabbed: false,
-      }
+      };
     }));
   }
 
