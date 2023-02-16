@@ -219,7 +219,7 @@ function App() {
         inspired by: <a href="https://www.youtube.com/watch?v=jvPPXbo87ds">"The Continuity of Splines"</a>, by Freya Holmér
       </p>
       <p>
-        code: <a href="https://github.com/ikr7/curves">ikr7/curves</a>
+        code: <a href="https://github.com/ikr7/curves">ikr7/curves</a> on GitHub
       </p>
     </div>
   );
