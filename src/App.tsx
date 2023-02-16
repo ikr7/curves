@@ -5,6 +5,7 @@ import { BSpline } from './BSpline';
 import { LinearSpline } from './Linear';
 import { ExtendedPoints } from './ExtendedPoints';
 import { BezierCurveList } from './BezierCurveList';
+import { CardinalSpline } from './Cardinal';
 
 type DraggablePoint = {
   x: number,
@@ -188,43 +189,7 @@ function App() {
         {showBSpline ? <BSpline points={extendedPoints} renderCurvature={showCurvature} /> : null}
         {showLinear ? <LinearSpline points={extendedPoints} /> : null}
         {showBezier ? <Bezier points={extendedPoints} renderCurvature={showCurvature} /> : null}
-        {(() => {
-          if (!showCardinal) {
-            return;
-          }
-          if (points.length < 2) {
-            return;
-          }
-          const velocities = [];
-          for (let i = 1; i < extendedPoints.length - 1; i++) {
-            const prev = extendedPoints[i - 1];
-            const next = extendedPoints[i + 1];
-            velocities.push({
-              x: next.x - prev.x,
-              y: next.y - prev.y,
-            });
-          }
-          let pathSpecification = `M ${points[0].x} ${points[0].y}`;
-          for (let i = 1; i < points.length; i++) {
-            pathSpecification += `
-              C
-                ${points[i - 1].x + velocities[i - 1].x * cardinalScale / 3}
-                ${points[i - 1].y + velocities[i - 1].y * cardinalScale / 3},
-                ${points[i].x - velocities[i].x * cardinalScale / 3}
-                ${points[i].y - velocities[i].y * cardinalScale / 3},
-                ${points[i].x}
-                ${points[i].y}
-            `;
-          }
-          return (
-            <path
-              d={pathSpecification}
-              stroke="lime"
-              strokeWidth={3}
-              fill="transparent"
-            />
-          );
-        })()}
+        {showCardinal ? <CardinalSpline points={extendedPoints} scale={cardinalScale} renderCurvature={showCurvature} /> : null}
         {<ExtendedPoints points={extendedPoints} mode={mode} />}
         {points.map(({ x, y, grabbed }, i) => {
           return (
