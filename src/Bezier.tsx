@@ -1,5 +1,6 @@
+import { BezierCurveList } from './BezierCurveList';
 import { computeCurvature } from './computeCurvature';
-import { Point } from './types';
+import { BezierCurve, Point } from './types';
 
 type BezierProps = {
   points: Point[],
@@ -21,23 +22,15 @@ export function Bezier(props: BezierProps) {
     return null;
   }
 
-  let pathSpecification = '';
+  const curves: BezierCurve[] = [];
 
-  pathSpecification += `M ${points[1].x} ${points[1].y}`;
-  pathSpecification += `
-    C
-      ${points[2].x} ${points[2].y},
-      ${points[3].x} ${points[3].y},
-      ${points[4].x} ${points[4].y}
-  `;
-
-  for (let i = 5; i < points.length - 3; i += 3) {
-    pathSpecification += `
-      C
-        ${points[i].x} ${points[i].y},
-        ${points[i + 1].x} ${points[i + 1].y},
-        ${points[i + 2].x} ${points[i + 2].y}
-    `;
+  for (let i = 1; i < points.length - 4; i += 3) {
+    curves.push([
+      { x: points[i].x, y: points[i].y },
+      { x: points[i + 1].x, y: points[i + 1].y },
+      { x: points[i + 2].x, y: points[i + 2].y },
+      { x: points[i + 3].x, y: points[i + 3].y },
+    ]);
   }
 
   // compute curvature (wip)
@@ -75,11 +68,13 @@ export function Bezier(props: BezierProps) {
 
   return (
     <>
-      <path
-        d={pathSpecification}
-        stroke="red"
-        strokeWidth={3}
-        fill="transparent"
+      <BezierCurveList
+        curves={curves}
+        pathProps={{
+          stroke: 'red',
+          strokeWidth: 3,
+          fill: 'transparent',
+        }}
       />
       {renderCurvature ? curvatureCircles : null}
     </>

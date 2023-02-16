@@ -1,5 +1,6 @@
+import { BezierCurveList } from './BezierCurveList';
 import { computeCurvature } from './computeCurvature';
-import { Point } from './types';
+import { BezierCurve, Point } from './types';
 
 type BSplineProps = {
   points: Point[],
@@ -30,7 +31,7 @@ export function BSpline(props: BSplineProps) {
 
   const bSplineToBezier = bezierMatrix.inverse().multiply(basisMatrix);
 
-  const bezierCurves: [Point, Point, Point, Point][] = [];
+  const bezierCurves: BezierCurve[] = [];
 
   const curvatureCircles = [];
 
@@ -96,27 +97,15 @@ export function BSpline(props: BSplineProps) {
 
   }
 
-  let pathSpecification = '';
-
-  pathSpecification += `M ${bezierCurves[0][0].x} ${bezierCurves[0][0].y}`;
-  pathSpecification += `
-        C
-          ${bezierCurves[0][1].x} ${bezierCurves[0][1].y},
-          ${bezierCurves[0][2].x} ${bezierCurves[0][2].y},
-          ${bezierCurves[0][3].x} ${bezierCurves[0][3].y}
-      `;
-
-  for (const [b0, b1, b2, b3] of bezierCurves.slice(1)) {
-    pathSpecification += ` S ${b2.x} ${b2.y}, ${b3.x} ${b3.y}`;
-  }
-
   return (
     <>
-      <path
-        d={pathSpecification}
-        stroke="yellow"
-        strokeWidth={3}
-        fill="transparent"
+      <BezierCurveList
+        curves={bezierCurves}
+        pathProps={{
+          stroke: 'yellow',
+          strokeWidth: 3,
+          fill: 'transparent',
+        }}
       />
       {renderCurvature ? curvatureCircles : null}
     </>

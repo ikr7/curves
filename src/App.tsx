@@ -4,6 +4,7 @@ import { Bezier } from './Bezier';
 import { BSpline } from './BSpline';
 import { LinearSpline } from './Linear';
 import { ExtendedPoints } from './ExtendedPoints';
+import { BezierCurveList } from './BezierCurveList';
 
 type DraggablePoint = {
   x: number,
