@@ -5,6 +5,7 @@ import { BezierCurve, Point } from './types';
 type BezierProps = {
   points: Point[],
   renderCurvature: boolean,
+  curvatureScale: number,
 };
 
 const bezierMatrix = (new DOMMatrix([
@@ -16,7 +17,7 @@ const bezierMatrix = (new DOMMatrix([
 
 export function Bezier(props: BezierProps) {
 
-  const { points, renderCurvature } = props;
+  const { points, renderCurvature, curvatureScale } = props;
 
   if (points.length < 6) {
     return null;
@@ -39,7 +40,7 @@ export function Bezier(props: BezierProps) {
 
   if (renderCurvature) {
 
-    for (let i = 1; i < points.length - 3; i += 3) {
+    for (let i = 1; i < points.length - 4; i += 3) {
       const cx = bezierMatrix.multiply(new DOMMatrix([
         points[i].x, points[i + 1].x, points[i + 2].x, points[i + 3].x,
         0, 0, 0, 0,
@@ -59,7 +60,7 @@ export function Bezier(props: BezierProps) {
       curvatureCircles.push(...computeCurvature({
         cubicCurveCoefficients: [c0, c1, c2, c3],
         resolution: 256,
-        renderScale: 10,
+        renderScale: curvatureScale,
         key: i
       }));
     }

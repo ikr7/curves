@@ -26,6 +26,7 @@ function App() {
   const [mode, setMode] = useState<OperationMode>('ADD_POINT');
   const [cardinalScale, setCardinalScale] = useState<number>(0.5);
   const [showCurvature, setShowCurvature] = useState<boolean>(false);
+  const [curvatureScale, setCurvatureScale] = useState<number>(20);
   const [showLinear, setShowLinear] = useState<boolean>(true);
   const [showBezier, setShowBezier] = useState<boolean>(true);
   const [showCardinal, setShowCardinal] = useState<boolean>(true);
@@ -135,6 +136,8 @@ function App() {
           <div>
             <input type="checkbox" id="showCurvature" checked={showCurvature} onChange={(e) => setShowCurvature(e.target.checked)} />
             <label htmlFor="showCurvature">show curvature (wip)</label>
+            <input type="range" disabled={!showCurvature} min={0} max={50} step={1} value={curvatureScale} onChange={(e) => setCurvatureScale(parseFloat(e.target.value))} />
+            <span>render scale: {curvatureScale}</span>
           </div>
           <div>
             <input type="checkbox" id="showLinear" checked={showLinear} onChange={(e) => setShowLinear(e.target.checked)} />
@@ -186,10 +189,10 @@ function App() {
         }}
         onPointerDown={handleCanvasPointerDown}
       >
-        {showBSpline ? <BSpline points={extendedPoints} renderCurvature={showCurvature} /> : null}
+        {showBSpline ? <BSpline points={extendedPoints} renderCurvature={showCurvature} curvatureScale={curvatureScale} /> : null}
         {showLinear ? <LinearSpline points={extendedPoints} /> : null}
-        {showBezier ? <Bezier points={extendedPoints} renderCurvature={showCurvature} /> : null}
-        {showCardinal ? <CardinalSpline points={extendedPoints} scale={cardinalScale} renderCurvature={showCurvature} /> : null}
+        {showBezier ? <Bezier points={extendedPoints} renderCurvature={showCurvature} curvatureScale={curvatureScale} /> : null}
+        {showCardinal ? <CardinalSpline points={extendedPoints} scale={cardinalScale} renderCurvature={showCurvature} curvatureScale={curvatureScale} /> : null}
         {<ExtendedPoints points={extendedPoints} mode={mode} />}
         {points.map(({ x, y, grabbed }, i) => {
           return (

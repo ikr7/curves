@@ -6,11 +6,12 @@ type CardinalSplineProps = {
   points: Point[],
   scale: number,
   renderCurvature: boolean,
+  curvatureScale: number,
 };
 
 export function CardinalSpline(props: CardinalSplineProps) {
 
-  const { points, scale, renderCurvature } = props;
+  const { points, scale, renderCurvature, curvatureScale } = props;
 
   if (points.length < 4) {
     return null;
@@ -90,7 +91,7 @@ export function CardinalSpline(props: CardinalSplineProps) {
       curvatureCircles.push(...computeCurvature({
         cubicCurveCoefficients: [c0, c1, c2, c3],
         resolution: 64,
-        renderScale: 20,
+        renderScale: curvatureScale,
         key: i
       }));
 

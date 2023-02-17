@@ -5,11 +5,12 @@ import { BezierCurve, Point } from './types';
 type BSplineProps = {
   points: Point[],
   renderCurvature: boolean,
+  curvatureScale: number,
 };
 
 export function BSpline(props: BSplineProps) {
 
-  const { points, renderCurvature } = props;
+  const { points, renderCurvature, curvatureScale } = props;
 
   if (points.length < 4) {
     return null;
@@ -89,7 +90,7 @@ export function BSpline(props: BSplineProps) {
       curvatureCircles.push(...computeCurvature({
         cubicCurveCoefficients: [c0, c1, c2, c3],
         resolution: 64,
-        renderScale: 20,
+        renderScale: curvatureScale,
         key: i
       }));
 
