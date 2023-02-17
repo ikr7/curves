@@ -25,7 +25,7 @@ function App() {
   ]);
   const [mode, setMode] = useState<OperationMode>('ADD_POINT');
   const [cardinalScale, setCardinalScale] = useState<number>(0.5);
-  const [showCurvature, setShowCurvature] = useState<boolean>(true);
+  const [showCurvature, setShowCurvature] = useState<boolean>(false);
   const [showLinear, setShowLinear] = useState<boolean>(true);
   const [showBezier, setShowBezier] = useState<boolean>(true);
   const [showCardinal, setShowCardinal] = useState<boolean>(true);
